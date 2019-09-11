@@ -105,6 +105,10 @@ function commandRemove(split, username, chatId) {
 
 // Set in table tasks
 function setInGroup(split, username, chatId, value) {
+  if (split.length < 2) {
+    sendMessage(chatId, "Please, write discipline character and tasks...");
+    return;
+  }
   if (split[1].length != 1 || SHEETS[split[1]] == undefined) {
     sendMessage(chatId, "Send mistake discipline character!");
     return;
@@ -123,6 +127,8 @@ function setInGroup(split, username, chatId, value) {
       return;
     }
     if (split[i].length == 1) split[i][1] = split[i][0];
+    if (isNaN(Number(split[i][1]))) split[i][1] = -1;
+    if (isNaN(Number(split[i][0]))) split[i][0] = -1;
   }
   // marks
   var accTasks = [];
@@ -174,8 +180,16 @@ function commandHelp(split, username, chatId) {
 }
 
 function commandRegister(split, username, chatId) {
+  if (split[1].length > 5) {
+    sendMessage(chatId, "Too long ID!");
+    return;
+  }
+  if (Number(split[1]) < 1) {
+    sendMessage(chatId, "Too small ID!");
+    return;
+  }
   if (isNaN(Number(split[1]))) {
-    sendMessage(chatId, "Uncorrect ID!");
+    sendMessage(chatId, "Incorrect ID!");
     return;
   }
   if (getValue(SHEETS["STUDENTS"], Number(split[1]) + 1, 3) == "") {
