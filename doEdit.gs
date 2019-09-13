@@ -73,8 +73,9 @@ function onEditable(e) {
     var sheet = e.range.getSheet();
     var height = e.range.getRowIndex();
     var width = e.range.getColumn();
+    Logger.log(sheet);
     if (height < 2 || width < 5 || SUBJECTSPREADSHEETS[sheet.getName()] == undefined) return;
-    // Logger.log(getBackground(sheet, height, width));
+    Logger.log(getBackground(sheet, height, width));
     var currentColor = FROMCOLORTODIGIT[getBackground(sheet, height, width)];
     var value = e.value;
     if (!(value == 1 || value == 0)) {
@@ -89,8 +90,8 @@ function onEditable(e) {
     } else {
       setBackground(sheet, height, width, FROMDIGITTOCOLOR[Number(currentColor) + Number(value)]);
       if (currentColor == 2 && value == 1) {
+        setValueSheets(sheet, height, 4, Number(getValueSheets(sheet, height, 4)) + 1);
         if (SUBJECTSPREADSHEETS[sheet.getName()] != "") {
-          setValueSheets(sheet, height, 4, Number(getValueSheets(sheet, height, 4)) + 1);
           sendTask("hah", "haha", sheet.getName());
         }
       }
