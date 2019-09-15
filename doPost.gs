@@ -240,7 +240,7 @@ function sendMessage(chatId, message) {
     'chat_id': String(chatId),
     'text': message,
     'parse_mode': 'HTML',
-    'disable_web_page_preview': false
+    'disable_web_page_preview': true
   }     
   var data = {
     "method": "post",
