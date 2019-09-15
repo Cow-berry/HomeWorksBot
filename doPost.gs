@@ -236,15 +236,16 @@ function makeLog(message, username) {
 
 function sendMessage(chatId, message) {
   var payload = {
-          'method': 'sendMessage',
-          'chat_id': String(chatId),
-          'text': message,
-          'parse_mode': 'HTML'
-        }     
-        var data = {
-          "method": "post",
-          "payload": payload
-        }
-        var API_TOKEN = 'YOUR_TOKEN'
-        UrlFetchApp.fetch('https://api.telegram.org/bot' + API_TOKEN + '/', data);
+    'method': 'sendMessage',
+    'chat_id': String(chatId),
+    'text': message,
+    'parse_mode': 'HTML',
+    'disable_web_page_preview': false
+  }     
+  var data = {
+    "method": "post",
+    "payload": payload
+  }
+  var API_TOKEN = 'YOUR_TOKEN'
+  UrlFetchApp.fetch('https://api.telegram.org/bot' + API_TOKEN + '/', data);
 }
