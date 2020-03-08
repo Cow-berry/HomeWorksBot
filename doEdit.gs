@@ -1,8 +1,10 @@
 var DISKRETHSPREADSHEET = ""; // there is a script!
 var ALGOSPREADSHEET = "";
+var MATLOGSPREADSHEET = "";
 var SUBJECTSPREADSHEETS = {
   "DiskrethMath" : DISKRETHSPREADSHEET,
-  "Algo" : ALGOSPREADSHEET
+  "Algo" : ALGOSPREADSHEET,
+  "MatLog" : MATLOGSPREADSHEET
 }
 
 var PASSWORD = "";
@@ -42,13 +44,18 @@ function sendTask(name, task, nameSheet) {
     "payload" : data
   }
   UrlFetchApp.fetch(SUBJECTSPREADSHEETS[nameSheet] + "?type=Write&group=" + group + "&name=" + name + "&task=" + task + "&password=" + PASSWORD);
-} // тут я не умею пользоваться обьектами для GET запроса, и поэтому делаю без них
+}
 
 var RED = "#ff0000";
 var BLACK = "#000000";
 var WHITE = "#ffffff";
 var YELLOW = "#ffff00";
 var GREEN = "#00ff00";
+
+var PRED = "#ffffff";
+var PWHITE = "#ffffff";
+var PYELLOW = "#fffeaa";
+var PGREEN = "#a8ff9f";
 
 var FROMCOLORTODIGIT = {
   "#ff0000" : 0,
@@ -57,11 +64,25 @@ var FROMCOLORTODIGIT = {
   "#00ff00" : 3
 }
 
+var FROMPCOLORTODIGIT = {
+  "#ffffff" : 0,
+  "#ffffff" : 1,
+  "#fffeaa" : 2,
+  "#a8ff9f" : 3
+}
+
 var FROMDIGITTOCOLOR = {
   0 : RED,
   1 : WHITE,
   2 : YELLOW,
   3 : GREEN
+}
+
+var FROMDIGITTOPCOLOR = {
+  0 : PRED,
+  1 : PWHITE,
+  2 : PYELLOW,
+  3 : PGREEN
 }
 
 function triggered() {
@@ -74,7 +95,7 @@ function onEditable(e) {
     var height = e.range.getRowIndex();
     var width = e.range.getColumn();
     Logger.log(sheet);
-    if (height < 2 || width < 5 || SUBJECTSPREADSHEETS[sheet.getName()] == undefined) return;
+    if (height < 3 || width < 5 || SUBJECTSPREADSHEETS[sheet.getName()] == undefined) return;
     Logger.log(getBackground(sheet, height, width));
     var currentColor = FROMCOLORTODIGIT[getBackground(sheet, height, width)];
     var value = e.value;
@@ -88,12 +109,16 @@ function onEditable(e) {
       message("Uncorrent color");
       return;
     } else {
+      paintColumn(width, FROMDIGITTOPCOLOR[Number(currentColor) + Number(value)], SHEET);
       setBackground(sheet, height, width, FROMDIGITTOCOLOR[Number(currentColor) + Number(value)]);
       if (currentColor == 2 && value == 1) {
         setValueSheets(sheet, height, 4, Number(getValueSheets(sheet, height, 4)) + 1);
         if (SUBJECTSPREADSHEETS[sheet.getName()] != "") {
           sendTask("hah", "haha", sheet.getName());
         }
+      }
+      if (currentColor == 3 && value == -1) {
+        setValueSheets(sheet, height, 4, Number(getValueSheets(sheet, height, 4)) - 1);
       }
     }
   } catch (exception) {

@@ -1,14 +1,16 @@
 function onOpen() {
+  return;
   SpreadsheetApp.getUi()
         .createMenu('Меню преподавателя')
         .addItem('Распределить таски на текущем листе', 'runTaskGen')
         .addToUi();
+  message("Информация для преподавателей! Пусть есть набор статусов (0 - красный - заваленная задача) (1 - белый - никаких действий (дефолтное состояние)) (2 - вызов к доске) (3 - отвеченная задача). Если вы ставите вместо плюсика 1, то повышаете статус, 0 - понижаете. На листе есть Распределение задач в меню преподавателя, не совсем оптимальное, но работающее"); 
 }
 
 var usedTasks = [], usedMem = [], a = [], setter = [];
 var SHEET = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 var messager = "";
-var numTasks = 50, numMem = 30;
+var numTasks = 300, numMem = 32;
 
 function message_messager() {
   message(messager);
@@ -95,6 +97,7 @@ function sumOnVertical(i) {
 
 function setTask(x, y) {
   setter[x][y] = 1;
+  message_messager();
   for (var i = 5; i < numTasks; i++) {
     a[x][i] = 0;
   }
@@ -175,7 +178,10 @@ function distributionAlgorithm() {
 function distributionWrite() {
   for (var i = 2; i < numMem; i++) {
     for (var j = 5; j < numTasks; j++) {
-      if (setter[i][j] == 1) setBackground(SHEET, i, j, YELLOW);
+      if (setter[i][j] == 1) {
+        paintColumn(j, PYELLOW, SHEET);
+        setBackground(SHEET, i, j, YELLOW);
+      }
     }
   }
 }
